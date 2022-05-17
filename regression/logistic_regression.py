@@ -13,7 +13,7 @@ class LogisticRegression:
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
-        self.weights = np.zeros(n_features)
+        self.weights = np.zeros(n_features, dtype=np.float64)
         self.bias = 0
 
         for _ in range(self.n_iters):
@@ -36,7 +36,7 @@ class LogisticRegression:
 
 
 if __name__ == '__main__':
-    bc = datasets.load_breast_cancer()
+    bc = datasets.load_breast_cancer(d)
     X, y = bc.data, bc.target
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
