@@ -6,8 +6,8 @@ from sklearn.model_selection import train_test_split
 
 def entropy(y):
     hist = np.bincount(y)
-    ps = hist/len(y)
-    return np.sum([p * np.log2(p) for p in ps if p > 0])
+    ps = hist / len(y)
+    return -np.sum([p * np.log2(p) for p in ps if p > 0])
 
 
 class Node:
@@ -59,7 +59,7 @@ class DecisionTree:
 
         left = self._grow_tree(X[left_idxs, :], y[left_idxs], depth + 1)
         right = self._grow_tree(X[right_idxs, :], y[right_idxs], depth + 1)
-        return None(best_feat, best_thresh, left, right)
+        return Node(best_feat, best_thresh, left, right)
 
     def _best_criteria(self, X, y, feat_idxs):
         best_gain = -1
