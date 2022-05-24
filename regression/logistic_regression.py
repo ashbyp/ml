@@ -79,6 +79,33 @@ def test_spam():
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
+def test_sklearn():
+    print('=' * 80)
+
+    bc = datasets.load_breast_cancer()
+    X, y = bc.data, bc.target
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
+
+    def accuracy(y_true, y_pred):
+        acc = np.sum(y_true == y_pred) / len(y_true)
+        return acc
+
+    from sklearn.linear_model import LogisticRegression as SK
+
+    clf = SK(random_state=0, max_iter=10000)
+    clf.fit(X_train, y_train)
+    predictions = clf.predict(X_test)
+
+    print(f'Actual : {y_test}')
+    print(f'Predict: {predictions}')
+
+    print(f'Accuracy {accuracy(y_test, predictions)}')
+
+
 if __name__ == '__main__':
     test_bc()
     test_spam()
+    test_sklearn()
+
+
+

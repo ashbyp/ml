@@ -70,5 +70,6 @@ def main():
     data = open_with_np_gen(filename=FILENAME + ".hdr", header=1)
     print(f'NP Gen data shape: {data.shape} of type {type(data[0][0])}')
 
+
 if __name__ == '__main__':
     main()
