@@ -66,3 +66,15 @@ if __name__ == '__main__':
     print(f'Actuals: {y_test}')
     print(f'Predict: {predicted}')
     print(f'Accuracy {accuracy(y_test, predicted)}')
+
+    print('=' * 80)
+
+    from sklearn.naive_bayes import GaussianNB
+    gnb = GaussianNB()
+    gnb.fit(X_train, y_train)
+    predicted = gnb.predict(X_test)
+
+    print(f'Actuals: {y_test}')
+    print(f'Predict: {predicted}')
+    print(f'Accuracy {accuracy(y_test, predicted)}')
+
