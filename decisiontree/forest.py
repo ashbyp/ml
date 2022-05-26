@@ -1,8 +1,11 @@
-import numpy as np
-from decisiontree.tree import NumpyDecisionTree
 from collections import Counter
+
+import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
+
+from decisiontree.tree import NumpyDecisionTree
+from util.common import class_name, accuracy
 
 
 def bootstrap_sample(X, y):
@@ -39,24 +42,24 @@ class NumpyRandomForest:
         return most_common
 
 
+def test_forest(forest, dataset_name, X, y, verbose=False):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
+
+    forest.fit(X_train, y_train)
+    predictions = forest.predict(X_test)
+
+    if verbose:
+        print(f'Actual : {y_test}')
+        print(f'Predict: {predictions}')
+
+    print(f'{class_name(forest)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+
+
+def run_tests(verbose=False):
+    bc = datasets.load_breast_cancer()
+    X, y = bc.data, bc.target
+    test_forest(NumpyRandomForest(n_trees=3, max_depth=10), 'breast cancer', X, y, verbose)
+
+
 if __name__ == '__main__':
-
-    def accuracy(y_true, y_pred):
-        acc = np.sum(y_true == y_pred) / len(y_true)
-        return acc
-
-    data = datasets.load_breast_cancer()
-    X = data.data
-    y = data.target
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=1234
-    )
-
-    clf = NumpyRandomForest(n_trees=3, max_depth=10)
-
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-    acc = accuracy(y_test, y_pred)
-
-    print("Accuracy:", acc)
+    run_tests(verbose=False)

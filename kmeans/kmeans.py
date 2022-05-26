@@ -81,12 +81,18 @@ class NumpyKMeans:
 
 
 if __name__ == '__main__':
-    X, y = datasets.make_blobs(n_samples=1000, n_features=2, centers=20, shuffle=True, random_state=42)
+    X, y = datasets.make_blobs(n_samples=50, n_features=2, centers=4, shuffle=True, random_state=42)
     print(X.shape)
     clusters = len(np.unique(y))
     print(clusters)
 
     km = NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False)
-    _ = km.predict(X)
+    print(km.predict(X))
     km.plot()
+
+    from sklearn.cluster import KMeans
+    kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
+    print(kmeans.labels_)
+
+
 

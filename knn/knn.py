@@ -1,10 +1,12 @@
 from collections import Counter
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+
 from util.common import euclidean_distance, class_name, accuracy, load_spam
 
 
