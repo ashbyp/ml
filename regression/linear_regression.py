@@ -2,13 +2,11 @@ from sklearn.model_selection import train_test_split
 from sklearn import datasets
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression as SK
+from util.common import mean_square_error, class_name
 
 
-def mean_square_error(y_true, y_predicted):
-    return np.mean((y_true - y_predicted)**2)
-
-
-class LinearRegression:
+class NumpyLinearRegression:
 
     def __init__(self, lr=0.001, n_iters=1000):
         self.lr = lr
@@ -35,46 +33,40 @@ class LinearRegression:
         return y_predicted
 
 
-if __name__ == '__main__':
-    X, y = datasets.make_regression(n_samples=100, n_features=1, noise=20, random_state=4)
+def test_regression(lr, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
-    fig = plt.figure(figsize=(8,6))
-    plt.scatter(X[:, 0], y, color="b", marker="o", s=30)
-    plt.show()
+    if verbose:
+        plt.figure(figsize=(8, 6))
+        plt.scatter(X[:, 0], y, color="b", marker="o", s=30)
+        plt.show()
 
-    print(X_test)
-    print(y_test)
-    print(X_test.shape)
-    print(y_test.shape)
+        print(X_test)
+        print(y_test)
+        print(X_test.shape)
+        print(y_test.shape)
 
-    lr = LinearRegression(lr=0.01)
     lr.fit(X_train, y_train)
     predicted = lr.predict(X_test)
-    mse = mean_square_error(y_test, predicted)
-    print(mse)
 
-    y_pred_line = lr.predict(X)
-    cmap = plt.get_cmap("viridis")
-    fig = plt.figure(figsize=(8, 6))
-    m1 = plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
-    m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
-    plt.plot(X, y_pred_line, color="black", linewidth=2, label="Prediction")
-    plt.show()
+    print(f'{class_name(lr)} MSE with dataset {dataset_name} {mean_square_error(y_test, predicted)}')
 
-    print('=' * 80)
+    if verbose:
+        y_pred_line = lr.predict(X)
+        cmap = plt.get_cmap("viridis")
+        plt.figure(figsize=(8, 6))
+        plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
+        plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
+        plt.plot(X, y_pred_line, color="black", linewidth=2, label="Prediction")
+        plt.show()
 
-    # Using sklearn
-    from sklearn.linear_model import LinearRegression as SK
-    reg = SK()
-    reg.fit(X_train, y_train)
-    predicted = reg.predict(X_test)
-    mse = mean_square_error(y_test, predicted)
-    print(mse)
 
-    y_pred_line = lr.predict(X)
-    fig = plt.figure(figsize=(8, 6))
-    m1 = plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
-    m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
-    plt.plot(X, y_pred_line, color="black", linewidth=2, label="sk learn Prediction")
-    plt.show()
+def run_tests(verbose=False):
+    X, y = datasets.make_regression(n_samples=100, n_features=1, noise=20, random_state=4)
+    test_regression(NumpyLinearRegression(lr=0.01), "regression", X, y, verbose)
+    test_regression(SK(), "regression", X, y, verbose)
+
+
+if __name__ == '__main__':
+    run_tests(verbose=False)
+

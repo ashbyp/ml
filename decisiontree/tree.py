@@ -23,7 +23,7 @@ class Node:
         return self.value is not None
 
 
-class DecisionTree:
+class NumpyDecisionTree:
 
     def __init__(self, min_samples_split=2, max_depth=100, n_feats=None):
         self.min_samples_split = min_samples_split
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         X, y, test_size=0.2, random_state=1234
     )
 
-    clf = DecisionTree(max_depth=10)
+    clf = NumpyDecisionTree(max_depth=10)
     clf.fit(X_train, y_train)
 
     y_pred = clf.predict(X_test)

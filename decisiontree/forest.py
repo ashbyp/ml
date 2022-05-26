@@ -1,5 +1,5 @@
 import numpy as np
-from decisiontree.tree import DecisionTree
+from decisiontree.tree import NumpyDecisionTree
 from collections import Counter
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -11,7 +11,7 @@ def bootstrap_sample(X, y):
     return X[idxs], y[idxs]
 
 
-class RandomForest:
+class NumpyRandomForest:
 
     def __init__(self, n_trees=100, min_samples_split=2, max_depth=100, n_feats=None):
         self.n_trees = n_trees
@@ -22,7 +22,7 @@ class RandomForest:
 
     def fit(self, X, y):
         for _ in range(self.n_trees):
-            tree = DecisionTree(self.min_samples_split, self.max_depth, self.n_feats)
+            tree = NumpyDecisionTree(self.min_samples_split, self.max_depth, self.n_feats)
             X_sample, y_sample = bootstrap_sample(X, y)
             tree.fit(X_sample, y_sample)
             self.trees.append(tree)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         X, y, test_size=0.2, random_state=1234
     )
 
-    clf = RandomForest(n_trees=3, max_depth=10)
+    clf = NumpyRandomForest(n_trees=3, max_depth=10)
 
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)

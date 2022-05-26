@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 
-class Perceptron:
+class NumpyPerceptron:
 
     def __init__(self, lr=0.01, n_iters=1000):
         self.lr = lr
@@ -76,7 +76,7 @@ def test_perception(p):
 
 
 if __name__ == '__main__':
-    test_perception(Perceptron())
+    test_perception(NumpyPerceptron())
     print('=' * 80)
 
     from sklearn.linear_model import Perceptron as SK

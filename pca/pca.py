@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 
-class PCA:
+class NumpyPCA:
 
     def __init__(self, n_components):
         self.n_components = n_components
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     y = data.target
 
     # Project the data onto the 2 primary principal components
-    pca = PCA(2)
+    pca = NumpyPCA(2)
     pca.fit(X)
     X_projected = pca.transform(X)
 

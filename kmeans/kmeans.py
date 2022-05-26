@@ -9,7 +9,7 @@ def euclidean_distance(x1, x2):
     return np.sqrt(np.sum((x1 - x2) ** 2))
 
 
-class KMeans:
+class NumpyKMeans:
 
     def __init__(self, K=5, max_iterations=100, plot_steps=False):
         self.K = K
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     clusters = len(np.unique(y))
     print(clusters)
 
-    km = KMeans(K=clusters, max_iterations=150, plot_steps=False)
+    km = NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False)
     _ = km.predict(X)
     km.plot()
 
