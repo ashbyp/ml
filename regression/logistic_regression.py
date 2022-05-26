@@ -3,7 +3,6 @@ from sklearn import datasets
 from sklearn.linear_model import LogisticRegression as SK
 from sklearn.model_selection import train_test_split
 
-from loading import loaddata
 from util.common import accuracy, class_name, load_spam
 
 
@@ -23,8 +22,8 @@ class NumpyLogisticRegression:
         for _ in range(self.n_iters):
             linear_model = np.dot(X, self.weights) + self.bias
             y_predicted = self._sigmoid(linear_model)
-            dw = (1/n_samples) * np.dot(X.T, (y_predicted-y))
-            db = (1/n_samples) * np.sum(y_predicted-y)
+            dw = (1 / n_samples) * np.dot(X.T, (y_predicted - y))
+            db = (1 / n_samples) * np.sum(y_predicted - y)
             self.weights -= self.lr * dw
             self.bias -= self.lr * db
 
@@ -65,7 +64,3 @@ def run_tests(verbose=False):
 
 if __name__ == '__main__':
     run_tests(verbose=False)
-
-
-
-

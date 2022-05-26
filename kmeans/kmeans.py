@@ -1,12 +1,12 @@
+from collections import Counter
+
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets
-import matplotlib.pyplot as plt
+
+from util.common import euclidean_distance
 
 np.random.seed(42)
-
-
-def euclidean_distance(x1, x2):
-    return np.sqrt(np.sum((x1 - x2) ** 2))
 
 
 class NumpyKMeans:
@@ -71,7 +71,7 @@ class NumpyKMeans:
         return labels
 
     def plot(self):
-        fig, ax = plt.subplots(figsize=(12,8))
+        fig, ax = plt.subplots(figsize=(12, 8))
         for i, index in enumerate(self.clusters):
             point = self.X[index].T
             ax.scatter(*point)
@@ -81,18 +81,21 @@ class NumpyKMeans:
 
 
 if __name__ == '__main__':
-    X, y = datasets.make_blobs(n_samples=50, n_features=2, centers=4, shuffle=True, random_state=42)
+    X, y = datasets.make_blobs(n_samples=100, n_features=2, centers=20, shuffle=True, random_state=42)
     print(X.shape)
     clusters = len(np.unique(y))
     print(clusters)
 
     km = NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False)
-    print(km.predict(X))
+    numpy_labels = km.predict(X)
+    print(Counter(numpy_labels))
     km.plot()
 
     from sklearn.cluster import KMeans
-    kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
-    print(kmeans.labels_)
 
+    sk_labels = KMeans(n_clusters=clusters, random_state=0).fit(X).labels_
+    print(Counter(sk_labels))
 
-
+    # labels might be different but counts should be similar
+    print(f'Numpy: {sorted(Counter(numpy_labels).values())}')
+    print(f'SK:    {sorted(Counter(sk_labels).values())}')
