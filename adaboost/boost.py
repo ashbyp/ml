@@ -92,7 +92,7 @@ class NumpyBoost:
         return y_pred
 
 
-def test_boost(boost, dataset_name, X, y, verbose=False):
+def test(boost, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     boost.fit(X_train, y_train)
@@ -109,18 +109,18 @@ def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
     y[y == 0] = -1
-    test_boost(NumpyBoost(), 'breast cancer', X, y, verbose)
-    test_boost(AdaBoostClassifier(), 'breast cancer', X, y, verbose)
+    test(NumpyBoost(), 'breast cancer', X, y, verbose)
+    test(AdaBoostClassifier(), 'breast cancer', X, y, verbose)
 
-    X, y = load_uci('spam')
-    y[y == 0] = -1
-
-    test_boost(NumpyBoost(), 'spam', X, y)
-    test_boost(AdaBoostClassifier(), 'spam', X, y)
+    for uci in ('spam', 'SPECT heart', 'wine'):
+        X, y = load_uci(uci)
+        y[y == 0] = -1
+        test(NumpyBoost(), uci, X, y)
+        test(AdaBoostClassifier(), uci, X, y)
 
 
 if __name__ == '__main__':
-    run_tests(verbose=False)
+    run_tests(verbose=True)
 
 
 

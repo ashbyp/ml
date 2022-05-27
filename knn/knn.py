@@ -45,7 +45,7 @@ class NumpyKNN:
         return most_common[0][0]
 
 
-def test_knn(knn, dataset_name, X, y, verbose=False):
+def test(knn, dataset_name, X, y, verbose=False):
     if verbose:
         plot(X, y)
 
@@ -71,14 +71,15 @@ def run_tests(verbose=False):
     iris = datasets.load_iris()
     X, y = iris.data, iris.target
 
-    test_knn(NumpyKNN(k=3), "iris", X, y, verbose)
-    test_knn(KNeighborsClassifier(n_neighbors=3), "iris", X, y, verbose)
+    test(NumpyKNN(k=3), "iris", X, y, verbose)
+    test(KNeighborsClassifier(n_neighbors=3), "iris", X, y, verbose)
 
-    X, y = load_uci('spam')
-    test_knn(NumpyKNN(k=3), "spam", X, y, verbose)
-    test_knn(KNeighborsClassifier(n_neighbors=3), "spam", X, y, verbose)
+    for uci in ('spam', 'SPECT heart', 'wine'):
+        X, y = load_uci(uci)
+        test(NumpyKNN(k=3), uci, X, y, verbose)
+        test(KNeighborsClassifier(n_neighbors=3), uci, X, y, verbose)
 
 
 if __name__ == '__main__':
-    run_tests(verbose=False)
+    run_tests(verbose=True)
 

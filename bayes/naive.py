@@ -51,7 +51,7 @@ class NumpyNaiveBayes:
         return numerator / denominator
 
 
-def test_bayes(bayes, dataset_name, X, y, verbose=False):
+def test(bayes, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     if verbose:
@@ -71,8 +71,8 @@ def test_bayes(bayes, dataset_name, X, y, verbose=False):
 def run_tests(verbose=False):
     X, y = datasets.make_classification(n_samples=1000, n_features=10, n_classes=2, random_state=123)
 
-    test_bayes(NumpyNaiveBayes(), "classification", X, y, verbose)
-    test_bayes(GaussianNB(), "classification", X, y, verbose)
+    test(NumpyNaiveBayes(), "classification", X, y, verbose)
+    test(GaussianNB(), "classification", X, y, verbose)
 
 
 if __name__ == '__main__':

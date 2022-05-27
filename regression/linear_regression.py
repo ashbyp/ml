@@ -33,7 +33,7 @@ class NumpyLinearRegression:
         return y_predicted
 
 
-def test_regression(lr, dataset_name, X, y, verbose=False):
+def test(lr, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     if verbose:
@@ -63,8 +63,8 @@ def test_regression(lr, dataset_name, X, y, verbose=False):
 
 def run_tests(verbose=False):
     X, y = datasets.make_regression(n_samples=100, n_features=1, noise=20, random_state=4)
-    test_regression(NumpyLinearRegression(lr=0.01), "regression", X, y, verbose)
-    test_regression(SK(), "regression", X, y, verbose)
+    test(NumpyLinearRegression(lr=0.01), "regression", X, y, verbose)
+    test(SK(), "regression", X, y, verbose)
 
 
 if __name__ == '__main__':
