@@ -1,8 +1,9 @@
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
 import numpy as np
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
-from util.common import accuracy, class_name, load_spam
+
+from util.common import accuracy, class_name
 
 
 class NumpyNaiveBayes:

@@ -3,6 +3,8 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets
+from sklearn.cluster import KMeans
+from util.common import class_name, accuracy
 
 from util.common import euclidean_distance
 
@@ -20,7 +22,7 @@ class NumpyKMeans:
         self.X = None
         self.n_samples, self.n_features = None, None
 
-    def predict(self, X):
+    def fit_predict(self, X):
         self.X = X
         self.n_samples, self.n_features = self.X.shape
 
@@ -80,7 +82,7 @@ class NumpyKMeans:
         plt.show()
 
 
-if __name__ == '__main__':
+def old_main():
     X, y = datasets.make_blobs(n_samples=100, n_features=2, centers=20, shuffle=True, random_state=42)
     print(X.shape)
     clusters = len(np.unique(y))
@@ -93,9 +95,36 @@ if __name__ == '__main__':
 
     from sklearn.cluster import KMeans
 
-    sk_labels = KMeans(n_clusters=clusters, random_state=0).fit(X).labels_
+    sk_labels = KMeans(n_clusters=clusters, random_state=0).fit_predict(X)
     print(Counter(sk_labels))
 
     # labels might be different but counts should be similar
     print(f'Numpy: {sorted(Counter(numpy_labels).values())}')
     print(f'SK:    {sorted(Counter(sk_labels).values())}')
+
+
+def test_kmeans(km, dataset_name, X, y, verbose=False):
+    labels = km.fit_predict(X)
+
+    if verbose:
+        print(f'Labels: {labels}')
+        if hasattr(km, 'plot'):
+            km.plot()
+
+    print(f'{class_name(km)} labels counter for {dataset_name} {sorted(Counter(labels).values())}')
+
+
+def run_tests(verbose=False):
+    X, y = datasets.make_blobs(n_samples=200, n_features=2, centers=8, shuffle=True, random_state=42)
+    clusters = len(np.unique(y))
+
+    if verbose:
+        print(f'X_shape:  {X.shape}')
+        print(f'Clusters: {clusters}')
+
+    test_kmeans(NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False), "blobs", X, y, verbose)
+    test_kmeans(KMeans(n_clusters=clusters, random_state=0), "blobs", X, y, verbose)
+
+
+if __name__ == '__main__':
+    run_tests(verbose=False)

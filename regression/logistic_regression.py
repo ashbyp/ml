@@ -3,7 +3,8 @@ from sklearn import datasets
 from sklearn.linear_model import LogisticRegression as SK
 from sklearn.model_selection import train_test_split
 
-from util.common import accuracy, class_name, load_spam
+from util.common import accuracy, class_name
+from util.data import load_uci
 
 
 class NumpyLogisticRegression:
@@ -57,7 +58,7 @@ def run_tests(verbose=False):
     test_regression(NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
     test_regression(SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
 
-    X, y = load_spam()
+    X, y = load_uci('spam')
     test_regression(NumpyLogisticRegression(lr=0.0001), "spam", X, y, verbose)
     test_regression(SK(random_state=0, max_iter=10000), "spam", X, y, verbose)
 
