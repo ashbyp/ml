@@ -5,6 +5,20 @@ from urllib.request import urlopen
 import numpy as np
 import pandas as pd
 
+
+def cols_from_char_to_int(filename, cols_to_convert):
+    converted = []
+    with open(filename, "rb") as f:
+        for line in f:
+            d = line.split(b',')
+            for col in cols_to_convert:
+                d[col] = bytes(str(ord(d[col])), 'utf-8')
+            converted.append(b','.join(d))
+
+    with open(filename, "wb") as f:
+        f.writelines(converted)
+
+
 UCI_DATA = {
     'spam': {
         'url': 'https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data',
@@ -43,6 +57,26 @@ UCI_DATA = {
         'filling': None,
         'labels_last': False
     },
+    '3D Spatial': {
+        'url': 'https://archive.ics.uci.edu/ml/machine-learning-databases/00246/3D_spatial_network.txt',
+        'header': False,
+        'split_labels': True,
+        'filename': '3D_spatial_network.txt',
+        'missing': None,
+        'filling': None,
+        'labels_last': False
+    },
+    'letter': {
+        'url': 'https://archive.ics.uci.edu/ml/machine-learning-databases/letter-recognition/letter-recognition.data',
+        'header': False,
+        'split_labels': True,
+        'filename': 'letter.data',
+        'missing': None,
+        'filling': None,
+        'labels_last': False,
+        'file_preproccesor': cols_from_char_to_int,
+        'file_preprocessor_args': ([0],),
+    },
 }
 
 
@@ -52,32 +86,41 @@ def download_urls(urls, filename, force_download):
         count = 0
 
         with open(filename, "wb") as f:
-            for url in urls:
+            for url_num, url in enumerate(urls):
                 data = urlopen(url)
                 for line in data:
                     count += 1
                     f.write(line)
-                f.write(b'\n')
+                if len(urls) > 1:
+                    f.write(b'\n')
         print(f' --> {count} samples downloaded')
-        return filename, count
+        return filename, count, True
 
-    return filename, sum(1 for line in open(filename))
+    return filename, sum(1 for line in open(filename)), False
 
 
-def load_uci(name, force_download=False):
+def load_uci(name, force_download=False, keep_percentage=100):
     data_def = UCI_DATA[name]
     if 'files' in data_def:
         urls = [data_def['url'] + '/' + file for file in data_def['files']]
     else:
         urls = [data_def['url']]
 
-    _, lines = download_urls(urls, data_def['filename'], force_download)
+    _, lines, executed_download = download_urls(urls, data_def['filename'], force_download)
     if not lines:
         raise RuntimeError(f'no data found for {name}')
+
+    if executed_download and 'file_preproccesor' in data_def:
+        data_def['file_preproccesor'](data_def['filename'], *data_def['file_preprocessor_args'])
 
     data = open_with_np_gen(data_def['filename'],
                             missing=data_def['missing'],
                             filling=data_def['filling'])
+
+    if keep_percentage != 100:
+        rows_to_keep = int(data.shape[0] * float(keep_percentage/100.0))
+        print(f' --> Keeping {rows_to_keep} from a total of {data.shape[0]} from {name}')
+        data = data[0:rows_to_keep]
 
     if data_def['split_labels']:
         return split_features_and_labels(data, data_def['labels_last'])
@@ -109,7 +152,7 @@ def open_with_np(filename):
 
 
 def open_with_np_gen(filename, header=0, missing=None, filling=None):
-    return np.genfromtxt(filename, delimiter=',', dtype=np.float32, skip_header=header,
+    return np.genfromtxt(filename, delimiter=',', skip_header=header,
                          missing_values=missing, filling_values=filling)
 
 
