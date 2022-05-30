@@ -1,9 +1,10 @@
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn import datasets
 from sklearn.linear_model import LinearRegression as SK
-from util.common import mean_square_error, class_name
+from sklearn.model_selection import train_test_split
+
+from util.common import mean_square_error, run_test_with_accuracy
 
 
 class NumpyLinearRegression:
@@ -18,7 +19,6 @@ class NumpyLinearRegression:
         # gradient descent method
         n_samples, n_features = X.shape
         self.weights = np.zeros(n_features)
-        print(f'Weights: {self.weights}')
         self.bias = 0
 
         for _ in range(self.n_iters):
@@ -33,7 +33,7 @@ class NumpyLinearRegression:
         return y_predicted
 
 
-def test(lr, dataset_name, X, y, verbose=False):
+def test(lr, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     if verbose:
@@ -49,8 +49,6 @@ def test(lr, dataset_name, X, y, verbose=False):
     lr.fit(X_train, y_train)
     predicted = lr.predict(X_test)
 
-    print(f'{class_name(lr)} MSE with dataset {dataset_name} {mean_square_error(y_test, predicted)}')
-
     if verbose:
         y_pred_line = lr.predict(X)
         cmap = plt.get_cmap("viridis")
@@ -60,11 +58,13 @@ def test(lr, dataset_name, X, y, verbose=False):
         plt.plot(X, y_pred_line, color="black", linewidth=2, label="Prediction")
         plt.show()
 
+    return y_test, predicted
+
 
 def run_tests(verbose=False):
     X, y = datasets.make_regression(n_samples=100, n_features=1, noise=20, random_state=4)
-    test(NumpyLinearRegression(lr=0.01), "regression", X, y, verbose)
-    test(SK(), "regression", X, y, verbose)
+    run_test_with_accuracy(test, NumpyLinearRegression(lr=0.01), "regression", X, y, verbose, mean_square_error)
+    run_test_with_accuracy(test, SK(), "regression", X, y, verbose, mean_square_error)
 
 
 if __name__ == '__main__':

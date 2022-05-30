@@ -4,7 +4,7 @@ from sklearn import datasets
 from sklearn.linear_model import Perceptron
 from sklearn.model_selection import train_test_split
 
-from util.common import class_name, accuracy
+from util.common import run_test_with_accuracy
 
 
 class NumpyPerceptron:
@@ -42,7 +42,7 @@ class NumpyPerceptron:
         return np.where(x>0, 1, 0)
 
 
-def test(perceptron, dataset_name, X, y, verbose=False):
+def test(perceptron, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     perceptron.fit(X_train, y_train)
@@ -51,8 +51,6 @@ def test(perceptron, dataset_name, X, y, verbose=False):
     if verbose:
         print(predictions)
         print(y_test)
-
-    print(f'{class_name(perceptron)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
 
     if verbose and hasattr(perceptron, 'weights'):
         fig = plt.figure()
@@ -73,12 +71,14 @@ def test(perceptron, dataset_name, X, y, verbose=False):
 
         plt.show()
 
+    return y_test, predictions
+
 
 def run_tests(verbose=False):
     X, y = datasets.make_blobs(n_samples=150, n_features=2, centers=2, cluster_std=1.05, random_state=2)
 
-    test(NumpyPerceptron(), "blobs", X, y, verbose)
-    test(Perceptron(), "blobs", X, y, verbose)
+    run_test_with_accuracy(test, NumpyPerceptron(), "blobs", X, y, verbose)
+    run_test_with_accuracy(test, Perceptron(), "blobs", X, y, verbose)
 
 
 if __name__ == '__main__':

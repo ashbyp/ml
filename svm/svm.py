@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import datasets
 import sklearn.svm
+from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
-from util.common import class_name, accuracy
+from util.common import run_test_with_accuracy
 
 
 class NumpySupportVectorMachine:
@@ -67,7 +67,7 @@ class NumpySupportVectorMachine:
         plt.show()
 
 
-def test(svm, dataset_name, X, y, verbose=False):
+def test(svm, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     svm.fit(X_train, y_train)
@@ -77,10 +77,10 @@ def test(svm, dataset_name, X, y, verbose=False):
         print(predictions)
         print(y_test)
 
-    print(f'{class_name(svm)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
-
     if verbose and hasattr(svm, "visualize_svm"):
         svm.visualize_svm(X, y)
+
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
@@ -89,8 +89,8 @@ def run_tests(verbose=False):
     )
     y = np.where(y == 0, -1, 1)
 
-    test(NumpySupportVectorMachine(), "blobs", X, y, verbose)
-    test(sklearn.svm.SVC(), "blobs", X, y, verbose)
+    run_test_with_accuracy(test, NumpySupportVectorMachine(), "blobs", X, y, verbose)
+    run_test_with_accuracy(test, sklearn.svm.SVC(), "blobs", X, y, verbose)
 
 
 if __name__ == '__main__':

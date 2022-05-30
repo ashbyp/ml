@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets
 from sklearn.cluster import KMeans
-from util.common import class_name, accuracy
 
+from util.common import class_name
 from util.common import euclidean_distance
-from util.data import load_uci
 
 np.random.seed(42)
 

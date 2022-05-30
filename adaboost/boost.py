@@ -3,8 +3,8 @@ from sklearn import datasets
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.model_selection import train_test_split
 
+from util.common import run_test_with_accuracy
 from util.data import load_uci
-from util.common import accuracy, class_name
 
 
 class DecisionStump:
@@ -92,7 +92,7 @@ class NumpyBoost:
         return y_pred
 
 
-def test(boost, dataset_name, X, y, verbose=False):
+def test(boost, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     boost.fit(X_train, y_train)
@@ -102,25 +102,26 @@ def test(boost, dataset_name, X, y, verbose=False):
         print(f'Actual : {y_test}')
         print(f'Predict: {predictions}')
 
-    print(f'{class_name(boost)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
     y[y == 0] = -1
-    test(NumpyBoost(), 'breast cancer', X, y, verbose)
-    test(AdaBoostClassifier(), 'breast cancer', X, y, verbose)
 
-    for uci in ('spam', 'SPECT heart', 'wine'):
-        X, y = load_uci(uci)
+    run_test_with_accuracy(test, NumpyBoost(), 'breast cancer', X, y, verbose)
+    run_test_with_accuracy(test, AdaBoostClassifier(), 'breast cancer', X, y, verbose)
+
+    for uci, keep_perc in (('spam', 100), ('SPECT heart', 100), ('wine', 100)):
+        X, y = load_uci(uci, keep_percentage=keep_perc, verbose=verbose)
         y[y == 0] = -1
-        test(NumpyBoost(), uci, X, y)
-        test(AdaBoostClassifier(), uci, X, y)
+        run_test_with_accuracy(test, NumpyBoost(), uci, X, y, verbose)
+        run_test_with_accuracy(test, AdaBoostClassifier(), uci, X, y, verbose)
 
 
 if __name__ == '__main__':
-    run_tests(verbose=True)
+    run_tests(verbose=False)
 
 
 
