@@ -2,6 +2,7 @@ from collections import Counter
 
 import numpy as np
 from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 
 from util.common import run_test_with_accuracy
@@ -120,7 +121,15 @@ def test(tree, X, y, verbose=False):
 def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
+
     run_test_with_accuracy(test, NumpyDecisionTree(max_depth=10), 'breast cancer', X, y, verbose)
+    run_test_with_accuracy(test, DecisionTreeClassifier(), 'breast cancer', X, y, verbose)
+
+    bc = datasets.load_iris()
+    X, y = bc.data, bc.target
+
+    run_test_with_accuracy(test, NumpyDecisionTree(max_depth=10), 'iris', X, y, verbose)
+    run_test_with_accuracy(test, DecisionTreeClassifier(), 'iris', X, y, verbose)
 
 
 if __name__ == '__main__':
