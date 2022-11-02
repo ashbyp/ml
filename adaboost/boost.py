@@ -1,7 +1,10 @@
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
 import numpy as np
+from sklearn import datasets
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.model_selection import train_test_split
+
 from loading import loaddata
+from util.common import accuracy, class_name, load_spam
 
 
 class DecisionStump:
@@ -23,7 +26,7 @@ class DecisionStump:
         return predictions
 
 
-class Boost:
+class NumpyBoost:
 
     def __init__(self, n_clf=5):
         self.n_clf = n_clf
@@ -86,7 +89,6 @@ class Boost:
         clf_preds = [clf.alpha * clf.predict(X) for clf in self.clfs]
         y_pred = np.sum(clf_preds, axis=0)
         y_pred = np.sign(y_pred)
-
         return y_pred
 
 
@@ -124,8 +126,6 @@ def test_spam(b, pr=False):
     print(f'X: {X.shape}')
     print(f'y: {y.shape}')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
-
     y[y == 0] = -1
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
@@ -140,18 +140,35 @@ def test_spam(b, pr=False):
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
+def test_boost(boost, dataset_name, X, y, verbose=False):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
+
+    boost.fit(X_train, y_train)
+    predictions = boost.predict(X_test)
+
+    if verbose:
+        print(f'Actual : {y_test}')
+        print(f'Predict: {predictions}')
+
+    print(f'{class_name(boost)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+
+
+def run_tests(verbose=False):
+    bc = datasets.load_breast_cancer()
+    X, y = bc.data, bc.target
+    y[y == 0] = -1
+    test_boost(NumpyBoost(), 'breast cancer', X, y, verbose)
+    test_boost(AdaBoostClassifier(), 'breast cancer', X, y, verbose)
+
+    X, y = load_spam()
+    y[y == 0] = -1
+
+    test_boost(NumpyBoost(), 'spam', X, y)
+    test_boost(AdaBoostClassifier(), 'spam', X, y)
+
+
 if __name__ == '__main__':
-    test_bc(Boost())
-    test_spam(Boost())
-
-    print('=' * 80)
-
-    from sklearn.ensemble import AdaBoostClassifier
-
-    test_bc(AdaBoostClassifier())
-    test_spam(AdaBoostClassifier())
-
-
+    run_tests(verbose=False)
 
 
 

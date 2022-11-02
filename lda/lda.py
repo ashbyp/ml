@@ -3,7 +3,7 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 
 
-class LDA:
+class NumpyLDA:
 
     def __init__(self, n_components):
         self.n_components = n_components
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     data = datasets.load_iris()
     X, y = data.data, data.target
 
-    lda = LDA(2)
+    lda = NumpyLDA(2)
     lda.fit(X, y)
     X_projected = lda.transform(X)
 

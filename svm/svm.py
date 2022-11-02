@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 
-class SupportVectorMachine:
+class NumpySupportVectorMachine:
 
     def __init__(self, lr=0.001, lambda_param=0.01, n_iters=1000):
         self.lr = lr
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
-    svm = SupportVectorMachine()
+    svm = NumpySupportVectorMachine()
     svm.fit(X_train, y_train)
     predictions = svm.predict(X_test)
 

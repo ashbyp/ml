@@ -1,10 +1,13 @@
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
 import numpy as np
+from sklearn import datasets
+from sklearn.linear_model import LogisticRegression as SK
+from sklearn.model_selection import train_test_split
+
 from loading import loaddata
+from util.common import accuracy, class_name, load_spam
 
 
-class LogisticRegression:
+class NumpyLogisticRegression:
 
     def __init__(self, lr=0.001, n_iters=1000):
         self.lr = lr
@@ -45,7 +48,7 @@ def test_bc():
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
 
-    r = LogisticRegression(lr=0.0001)
+    r = NumpyLogisticRegression(lr=0.0001)
     r.fit(X_train, y_train)
     predictions = r.predict(X_test)
 
@@ -69,7 +72,7 @@ def test_spam():
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
 
-    r = LogisticRegression(lr=0.01)
+    r = NumpyLogisticRegression(lr=0.01)
     r.fit(X_train, y_train)
     predictions = r.predict(X_test)
 
@@ -102,10 +105,33 @@ def test_sklearn():
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
+def test_regression(lr, dataset_name, X, y, verbose=False):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
+    lr.fit(X_train, y_train)
+    predictions = lr.predict(X_test)
+
+    if verbose:
+        print(f'Actual : {y_test}')
+        print(f'Predict: {predictions}')
+
+    print(f'{class_name(lr)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+
+
+def run_tests(verbose=False):
+    bc = datasets.load_breast_cancer()
+    X, y = bc.data, bc.target
+
+    test_regression(NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
+    test_regression(SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
+
+    X, y = load_spam()
+    test_regression(NumpyLogisticRegression(lr=0.0001), "spam", X, y, verbose)
+    test_regression(SK(random_state=0, max_iter=10000), "spam", X, y, verbose)
+
+
 if __name__ == '__main__':
-    test_bc()
-    test_spam()
-    test_sklearn()
+    run_tests(verbose=False)
+
 
 
 
