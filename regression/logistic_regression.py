@@ -36,7 +36,7 @@ class LogisticRegression:
 
 
 if __name__ == '__main__':
-    bc = datasets.load_breast_cancer(d)
+    bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
 
-    r = LogisticRegression()
+    r = LogisticRegression(lr=0.0001)
     r.fit(X_train, y_train)
     predictions = r.predict(X_test)
 
