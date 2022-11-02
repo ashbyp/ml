@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from util.common import class_name, accuracy
 
 from util.common import euclidean_distance
+from util.data import load_uci
 
 np.random.seed(42)
 
@@ -82,27 +83,6 @@ class NumpyKMeans:
         plt.show()
 
 
-def old_main():
-    X, y = datasets.make_blobs(n_samples=100, n_features=2, centers=20, shuffle=True, random_state=42)
-    print(X.shape)
-    clusters = len(np.unique(y))
-    print(clusters)
-
-    km = NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False)
-    numpy_labels = km.predict(X)
-    print(Counter(numpy_labels))
-    km.plot()
-
-    from sklearn.cluster import KMeans
-
-    sk_labels = KMeans(n_clusters=clusters, random_state=0).fit_predict(X)
-    print(Counter(sk_labels))
-
-    # labels might be different but counts should be similar
-    print(f'Numpy: {sorted(Counter(numpy_labels).values())}')
-    print(f'SK:    {sorted(Counter(sk_labels).values())}')
-
-
 def test(km, dataset_name, X, y, verbose=False):
     labels = km.fit_predict(X)
 
@@ -115,7 +95,7 @@ def test(km, dataset_name, X, y, verbose=False):
 
 
 def run_tests(verbose=False):
-    X, y = datasets.make_blobs(n_samples=200, n_features=2, centers=8, shuffle=True, random_state=42)
+    X, y = datasets.make_blobs(n_samples=200, n_features=3, centers=8, shuffle=True, random_state=42)
     clusters = len(np.unique(y))
 
     if verbose:
@@ -127,4 +107,4 @@ def run_tests(verbose=False):
 
 
 if __name__ == '__main__':
-    run_tests(verbose=False)
+    run_tests(verbose=True)
