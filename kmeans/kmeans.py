@@ -103,7 +103,7 @@ def old_main():
     print(f'SK:    {sorted(Counter(sk_labels).values())}')
 
 
-def test_kmeans(km, dataset_name, X, y, verbose=False):
+def test(km, dataset_name, X, y, verbose=False):
     labels = km.fit_predict(X)
 
     if verbose:
@@ -122,8 +122,8 @@ def run_tests(verbose=False):
         print(f'X_shape:  {X.shape}')
         print(f'Clusters: {clusters}')
 
-    test_kmeans(NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False), "blobs", X, y, verbose)
-    test_kmeans(KMeans(n_clusters=clusters, random_state=0), "blobs", X, y, verbose)
+    test(NumpyKMeans(K=clusters, max_iterations=150, plot_steps=False), "blobs", X, y, verbose)
+    test(KMeans(n_clusters=clusters, random_state=0), "blobs", X, y, verbose)
 
 
 if __name__ == '__main__':

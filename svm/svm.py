@@ -67,7 +67,7 @@ class NumpySupportVectorMachine:
         plt.show()
 
 
-def test_svm(svm, dataset_name, X, y, verbose=False):
+def test(svm, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     svm.fit(X_train, y_train)
@@ -89,8 +89,8 @@ def run_tests(verbose=False):
     )
     y = np.where(y == 0, -1, 1)
 
-    test_svm(NumpySupportVectorMachine(), "blobs", X, y, verbose)
-    test_svm(sklearn.svm.SVC(), "blobs", X, y, verbose)
+    test(NumpySupportVectorMachine(), "blobs", X, y, verbose)
+    test(sklearn.svm.SVC(), "blobs", X, y, verbose)
 
 
 if __name__ == '__main__':

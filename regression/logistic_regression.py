@@ -39,7 +39,7 @@ class NumpyLogisticRegression:
         return 1 / (1 + np.exp(-x))
 
 
-def test_regression(lr, dataset_name, X, y, verbose=False):
+def test(lr, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
     lr.fit(X_train, y_train)
     predictions = lr.predict(X_test)
@@ -55,12 +55,13 @@ def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
 
-    test_regression(NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
-    test_regression(SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
+    test(NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
+    test(SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
 
-    X, y = load_uci('spam')
-    test_regression(NumpyLogisticRegression(lr=0.0001), "spam", X, y, verbose)
-    test_regression(SK(random_state=0, max_iter=10000), "spam", X, y, verbose)
+    for uci in ('spam', 'SPECT heart', 'wine'):
+        X, y = load_uci(uci)
+        test(NumpyLogisticRegression(lr=0.0001), uci, X, y, verbose)
+        test(SK(random_state=0, max_iter=10000), uci, X, y, verbose)
 
 
 if __name__ == '__main__':

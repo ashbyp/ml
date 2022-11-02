@@ -42,7 +42,7 @@ class NumpyPerceptron:
         return np.where(x>0, 1, 0)
 
 
-def test_perceptron(perceptron, dataset_name, X, y, verbose=False):
+def test(perceptron, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     perceptron.fit(X_train, y_train)
@@ -77,8 +77,8 @@ def test_perceptron(perceptron, dataset_name, X, y, verbose=False):
 def run_tests(verbose=False):
     X, y = datasets.make_blobs(n_samples=150, n_features=2, centers=2, cluster_std=1.05, random_state=2)
 
-    test_perceptron(NumpyPerceptron(), "blobs", X, y, verbose)
-    test_perceptron(Perceptron(), "blobs", X, y, verbose)
+    test(NumpyPerceptron(), "blobs", X, y, verbose)
+    test(Perceptron(), "blobs", X, y, verbose)
 
 
 if __name__ == '__main__':
