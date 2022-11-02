@@ -7,7 +7,7 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
-from util.common import euclidean_distance, class_name, accuracy
+from util.common import euclidean_distance, run_test_with_accuracy
 from util.data import load_uci
 
 
@@ -45,7 +45,7 @@ class NumpyKNN:
         return most_common[0][0]
 
 
-def test(knn, dataset_name, X, y, verbose=False):
+def test(knn, X, y, verbose=False):
     if verbose:
         plot(X, y)
 
@@ -64,20 +64,20 @@ def test(knn, dataset_name, X, y, verbose=False):
         print(predictions)
         print(y_test)
 
-    print(f'{class_name(knn)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     iris = datasets.load_iris()
     X, y = iris.data, iris.target
 
-    test(NumpyKNN(k=3), "iris", X, y, verbose)
-    test(KNeighborsClassifier(n_neighbors=3), "iris", X, y, verbose)
+    run_test_with_accuracy(test, NumpyKNN(k=3), "iris", X, y, verbose)
+    run_test_with_accuracy(test, KNeighborsClassifier(n_neighbors=3), "iris", X, y, verbose)
 
     for uci, keep_perc in (('spam', 50), ('SPECT heart', 100), ('wine', 100), ('letter', 20)):
-        X, y = load_uci(uci, keep_percentage=keep_perc)
-        test(NumpyKNN(k=3), uci, X, y, verbose)
-        test(KNeighborsClassifier(n_neighbors=3), uci, X, y, verbose)
+        X, y = load_uci(uci, keep_percentage=keep_perc, verbose=verbose)
+        run_test_with_accuracy(test, NumpyKNN(k=3), uci, X, y, verbose)
+        run_test_with_accuracy(test, KNeighborsClassifier(n_neighbors=3), uci, X, y, verbose)
 
 
 if __name__ == '__main__':

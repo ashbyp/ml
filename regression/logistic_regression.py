@@ -3,7 +3,7 @@ from sklearn import datasets
 from sklearn.linear_model import LogisticRegression as SK
 from sklearn.model_selection import train_test_split
 
-from util.common import accuracy, class_name
+from util.common import run_test_with_accuracy
 from util.data import load_uci
 
 
@@ -39,7 +39,7 @@ class NumpyLogisticRegression:
         return 1 / (1 + np.exp(-x))
 
 
-def test(lr, dataset_name, X, y, verbose=False):
+def test(lr, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
     lr.fit(X_train, y_train)
     predictions = lr.predict(X_test)
@@ -48,20 +48,20 @@ def test(lr, dataset_name, X, y, verbose=False):
         print(f'Actual : {y_test}')
         print(f'Predict: {predictions}')
 
-    print(f'{class_name(lr)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
 
-    test(NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
-    test(SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
+    run_test_with_accuracy(test, NumpyLogisticRegression(lr=0.0001), "breast cancer", X, y, verbose)
+    run_test_with_accuracy(test, SK(random_state=0, max_iter=10000), "breast cancer", X, y, verbose)
 
     for uci in ('spam', 'SPECT heart', 'wine'):
-        X, y = load_uci(uci)
-        test(NumpyLogisticRegression(lr=0.0001), uci, X, y, verbose)
-        test(SK(random_state=0, max_iter=10000), uci, X, y, verbose)
+        X, y = load_uci(uci, verbose=verbose)
+        run_test_with_accuracy(test, NumpyLogisticRegression(lr=0.0001), uci, X, y, verbose)
+        run_test_with_accuracy(test, SK(random_state=0, max_iter=10000), uci, X, y, verbose)
 
 
 if __name__ == '__main__':

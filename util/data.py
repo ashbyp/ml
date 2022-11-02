@@ -80,9 +80,9 @@ UCI_DATA = {
 }
 
 
-def download_urls(urls, filename, force_download):
+def download_urls(urls, filename, force_download, verbose):
     if not path.exists(filename) or force_download:
-        print(f' --> Downloading {filename}')
+        if verbose: print(f' --> Downloading {filename}')
         count = 0
 
         with open(filename, "wb") as f:
@@ -93,20 +93,20 @@ def download_urls(urls, filename, force_download):
                     f.write(line)
                 if len(urls) > 1:
                     f.write(b'\n')
-        print(f' --> {count} samples downloaded')
+        if verbose: print(f' --> {count} samples downloaded')
         return filename, count, True
 
     return filename, sum(1 for line in open(filename)), False
 
 
-def load_uci(name, force_download=False, keep_percentage=100):
+def load_uci(name, force_download=False, keep_percentage=100, verbose=True):
     data_def = UCI_DATA[name]
     if 'files' in data_def:
         urls = [data_def['url'] + '/' + file for file in data_def['files']]
     else:
         urls = [data_def['url']]
 
-    _, lines, executed_download = download_urls(urls, data_def['filename'], force_download)
+    _, lines, executed_download = download_urls(urls, data_def['filename'], force_download, verbose)
     if not lines:
         raise RuntimeError(f'no data found for {name}')
 
@@ -119,7 +119,7 @@ def load_uci(name, force_download=False, keep_percentage=100):
 
     if keep_percentage != 100:
         rows_to_keep = int(data.shape[0] * float(keep_percentage/100.0))
-        print(f' --> Keeping {rows_to_keep} from a total of {data.shape[0]} from {name}')
+        if verbose: print(f' --> Keeping {rows_to_keep} from a total of {data.shape[0]} from {name}')
         data = data[0:rows_to_keep]
 
     if data_def['split_labels']:

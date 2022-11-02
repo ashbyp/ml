@@ -3,7 +3,7 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 
-from util.common import accuracy, class_name
+from util.common import run_test_with_accuracy
 
 
 class NumpyNaiveBayes:
@@ -51,7 +51,7 @@ class NumpyNaiveBayes:
         return numerator / denominator
 
 
-def test(bayes, dataset_name, X, y, verbose=False):
+def test(bayes, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     if verbose:
@@ -65,14 +65,14 @@ def test(bayes, dataset_name, X, y, verbose=False):
         print(f'Actual : {y_test}')
         print(f'Predict: {predictions}')
 
-    print(f'{class_name(bayes)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     X, y = datasets.make_classification(n_samples=1000, n_features=10, n_classes=2, random_state=123)
 
-    test(NumpyNaiveBayes(), "classification", X, y, verbose)
-    test(GaussianNB(), "classification", X, y, verbose)
+    run_test_with_accuracy(test, NumpyNaiveBayes(), "classification", X, y, verbose)
+    run_test_with_accuracy(test, GaussianNB(), "classification", X, y, verbose)
 
 
 if __name__ == '__main__':

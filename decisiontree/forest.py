@@ -5,7 +5,7 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
 from decisiontree.tree import NumpyDecisionTree
-from util.common import class_name, accuracy
+from util.common import run_test_with_accuracy
 
 
 def bootstrap_sample(X, y):
@@ -42,7 +42,7 @@ class NumpyRandomForest:
         return most_common
 
 
-def test(forest, dataset_name, X, y, verbose=False):
+def test(forest, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     forest.fit(X_train, y_train)
@@ -52,13 +52,13 @@ def test(forest, dataset_name, X, y, verbose=False):
         print(f'Actual : {y_test}')
         print(f'Predict: {predictions}')
 
-    print(f'{class_name(forest)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
-    test(NumpyRandomForest(n_trees=3, max_depth=10), 'breast cancer', X, y, verbose)
+    run_test_with_accuracy(test, NumpyRandomForest(n_trees=3, max_depth=10), 'breast cancer', X, y, verbose)
 
 
 if __name__ == '__main__':

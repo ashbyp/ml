@@ -4,7 +4,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
-from util.common import class_name, accuracy
+from util.common import run_test_with_accuracy
 
 
 def entropy(y):
@@ -104,7 +104,7 @@ class NumpyDecisionTree:
         return most_common
 
 
-def test(tree, dataset_name, X, y, verbose=False):
+def test(tree, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
     tree.fit(X_train, y_train)
@@ -114,13 +114,13 @@ def test(tree, dataset_name, X, y, verbose=False):
         print(f'Actual : {y_test}')
         print(f'Predict: {predictions}')
 
-    print(f'{class_name(tree)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
+    return y_test, predictions
 
 
 def run_tests(verbose=False):
     bc = datasets.load_breast_cancer()
     X, y = bc.data, bc.target
-    test(NumpyDecisionTree(max_depth=10), 'breast cancer', X, y, verbose)
+    run_test_with_accuracy(test, NumpyDecisionTree(max_depth=10), 'breast cancer', X, y, verbose)
 
 
 if __name__ == '__main__':
