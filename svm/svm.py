@@ -1,7 +1,10 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets
+from sklearn import svm
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
+
+from util.common import class_name, accuracy
 
 
 class NumpySupportVectorMachine:
@@ -34,24 +37,17 @@ class NumpySupportVectorMachine:
         return np.sign(linear)
 
 
-if __name__ == '__main__':
-    X, y = datasets.make_blobs(
-        n_samples=50, n_features=2, centers=2, cluster_std=1.05, random_state=40
-    )
-    y = np.where(y == 0, -1, 1)
-
+def test_svm(svm, dataset_name, X, y, verbose=False):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
-    svm = NumpySupportVectorMachine()
     svm.fit(X_train, y_train)
     predictions = svm.predict(X_test)
 
-    print(svm.weights, svm.bias)
+    if verbose:
+        print(predictions)
+        print(y_test)
 
-    print(f'Actuals: {y_test}')
-    print(f'Predict: {predictions}')
-    print(y_test == predictions)
-
+    print(f'{class_name(svm)} accuracy with dataset {dataset_name} {accuracy(y_test, predictions)}')
 
     def visualize_svm():
         def get_hyperplane_value(x, w, b, offset):
@@ -83,8 +79,22 @@ if __name__ == '__main__':
 
         plt.show()
 
+    if verbose and hasattr(svm, "weights"):
+        visualize_svm()
 
-    visualize_svm()
+
+def run_tests(verbose=False):
+    X, y = datasets.make_blobs(
+        n_samples=50, n_features=2, centers=2, cluster_std=1.05, random_state=40
+    )
+    y = np.where(y == 0, -1, 1)
+
+    test_svm(NumpySupportVectorMachine(), "blobs", X, y, verbose)
+    test_svm(svm.SVC(), "blobs", X, y, verbose)
+
+
+if __name__ == '__main__':
+    run_tests(verbose=True)
 
 
 
