@@ -61,3 +61,20 @@ if __name__ == '__main__':
     m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
     plt.plot(X, y_pred_line, color="black", linewidth=2, label="Prediction")
     plt.show()
+
+    print('=' * 80)
+
+    # Using sklearn
+    from sklearn.linear_model import LinearRegression
+    reg = LinearRegression()
+    reg.fit(X_train, y_train)
+    predicted = reg.predict(X_test)
+    mse = mean_square_error(y_test, predicted)
+    print(mse)
+
+    y_pred_line = lr.predict(X)
+    fig = plt.figure(figsize=(8, 6))
+    m1 = plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
+    m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
+    plt.plot(X, y_pred_line, color="black", linewidth=2, label="sk learn Prediction")
+    plt.show()

@@ -64,3 +64,15 @@ if __name__ == '__main__':
     print(y_test)
     accuracy = np.sum(predictions == y_test) / len(y_test)
     print(accuracy)
+
+    print('=' * 80)
+
+    # Using sklearn
+    from sklearn.neighbors import KNeighborsClassifier
+    neigh = KNeighborsClassifier(n_neighbors=3)
+    neigh.fit(X_train, y_train)
+    predictions = neigh.predict(X_test)
+    print(predictions)
+    print(y_test)
+    accuracy = np.sum(predictions == y_test) / len(y_test)
+    print(accuracy)

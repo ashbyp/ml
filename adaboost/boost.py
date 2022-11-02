@@ -1,6 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 import numpy as np
+from loading import loaddata
 
 
 class DecisionStump:
@@ -89,9 +90,7 @@ class Boost:
         return y_pred
 
 
-
-if __name__ == '__main__':
-
+def test_bc():
     def accuracy(y_true, y_pred):
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
@@ -113,6 +112,37 @@ if __name__ == '__main__':
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
+def test_spam():
+    def accuracy(y_true, y_pred):
+        acc = np.sum(y_true == y_pred) / len(y_true)
+        return acc
+
+    loaddata.download_spam()
+    data = loaddata.open_with_np()
+    print(f'CSV data shape: {data.shape}')
+    X, y = loaddata.split_samples_and_features(data)
+    print(f'X: {X.shape}')
+    print(f'y: {y.shape}')
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
+
+    y[y == 0] = -1
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
+
+    b = Boost(n_clf=10)
+    b.fit(X_train, y_train)
+    predictions = b.predict(X_test)
+
+    print(f'Actual : {y_test}')
+    print(f'Predict: {predictions}')
+
+    print(f'Accuracy {accuracy(y_test, predictions)}')
+
+
+if __name__ == '__main__':
+    test_bc()
+    test_spam()
 
 
 
