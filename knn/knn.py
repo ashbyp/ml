@@ -7,7 +7,8 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
-from util.common import euclidean_distance, class_name, accuracy, load_spam
+from util.common import euclidean_distance, class_name, accuracy
+from util.data import load_uci
 
 
 def plot(X, y):
@@ -73,7 +74,7 @@ def run_tests(verbose=False):
     test_knn(NumpyKNN(k=3), "iris", X, y, verbose)
     test_knn(KNeighborsClassifier(n_neighbors=3), "iris", X, y, verbose)
 
-    X, y = load_spam()
+    X, y = load_uci('spam')
     test_knn(NumpyKNN(k=3), "spam", X, y, verbose)
     test_knn(KNeighborsClassifier(n_neighbors=3), "spam", X, y, verbose)
 

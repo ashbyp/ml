@@ -1,5 +1,4 @@
 import numpy as np
-from loading import loaddata
 
 
 def accuracy(y_true, y_pred):
@@ -7,15 +6,8 @@ def accuracy(y_true, y_pred):
     return acc
 
 
-def class_name(cls):
-    return type(cls).__name__
-
-
-def load_spam():
-    """Returns spam features,target in the right format to work with"""
-    filename, _ = loaddata.download_spam(force_download=False)
-    data = loaddata.open_with_np(filename)
-    return loaddata.split_features_and_labels(data)
+def class_name(cls, width=25):
+    return f'{type(cls).__name__:{width}s}'
 
 
 def euclidean_distance(x1, x2):

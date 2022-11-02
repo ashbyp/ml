@@ -5,3 +5,4 @@ __pycache__
 private.txt
 spambase.data
 spambase.data.hdr
+tumor.data
