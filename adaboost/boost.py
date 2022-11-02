@@ -90,7 +90,7 @@ class Boost:
         return y_pred
 
 
-def test_bc():
+def test_bc(b, pr=False):
     def accuracy(y_true, y_pred):
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
@@ -102,17 +102,17 @@ def test_bc():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
-    b = Boost()
     b.fit(X_train, y_train)
     predictions = b.predict(X_test)
 
-    print(f'Actual : {y_test}')
-    print(f'Predict: {predictions}')
+    if pr:
+        print(f'Actual : {y_test}')
+        print(f'Predict: {predictions}')
 
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
-def test_spam():
+def test_spam(b, pr=False):
     def accuracy(y_true, y_pred):
         acc = np.sum(y_true == y_pred) / len(y_true)
         return acc
@@ -130,19 +130,26 @@ def test_spam():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
 
-    b = Boost(n_clf=10)
     b.fit(X_train, y_train)
     predictions = b.predict(X_test)
 
-    print(f'Actual : {y_test}')
-    print(f'Predict: {predictions}')
+    if pr:
+        print(f'Actual : {y_test}')
+        print(f'Predict: {predictions}')
 
     print(f'Accuracy {accuracy(y_test, predictions)}')
 
 
 if __name__ == '__main__':
-    test_bc()
-    test_spam()
+    test_bc(Boost())
+    test_spam(Boost())
+
+    print('=' * 80)
+
+    from sklearn.ensemble import AdaBoostClassifier
+
+    test_bc(AdaBoostClassifier())
+    test_spam(AdaBoostClassifier())
 
 
 
