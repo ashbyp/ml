@@ -65,8 +65,8 @@ if __name__ == '__main__':
     print('=' * 80)
 
     # Using sklearn
-    from sklearn.linear_model import LinearRegression
-    reg = LinearRegression()
+    from sklearn.linear_model import LinearRegression as SK
+    reg = SK()
     reg.fit(X_train, y_train)
     predicted = reg.predict(X_test)
     mse = mean_square_error(y_test, predicted)
