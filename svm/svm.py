@@ -92,6 +92,12 @@ def run_tests(verbose=False):
     run_test_with_accuracy(test, NumpySupportVectorMachine(), "blobs", X, y, verbose)
     run_test_with_accuracy(test, sklearn.svm.SVC(), "blobs", X, y, verbose)
 
+    iris = datasets.load_iris()
+    X, y = iris.data, iris.target
+
+    run_test_with_accuracy(test, NumpySupportVectorMachine(), "iris", X, y, verbose)
+    run_test_with_accuracy(test, sklearn.svm.SVC(), "iris", X, y, verbose)
+
 
 if __name__ == '__main__':
     run_tests(verbose=True)

@@ -74,6 +74,12 @@ def run_tests(verbose=False):
     run_test_with_accuracy(test, NumpyNaiveBayes(), "classification", X, y, verbose)
     run_test_with_accuracy(test, GaussianNB(), "classification", X, y, verbose)
 
+    iris = datasets.load_iris()
+    X, y = iris.data, iris.target
+
+    run_test_with_accuracy(test, NumpyNaiveBayes(), "iris", X, y, verbose)
+    run_test_with_accuracy(test, GaussianNB(), "iris", X, y, verbose)
+
 
 if __name__ == '__main__':
     run_tests(verbose=False)
